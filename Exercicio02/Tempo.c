@@ -32,6 +32,7 @@ int main() {
 #endif
 
   // para todos os tamanhos do tabuleiro
+  printf("module.exports = [");
 
   for (pow=POWMIN; pow<=POWMAX; pow++){
 
@@ -53,17 +54,18 @@ int main() {
     t2 = wall_time();
     
     if (Correto(tabulIn, tam)) 
-      printf("**RESULTADO CORRETO; threads=%d; procs=%d; ", numThreads, numProcs);
+      printf("{ threads: %d, procs: %d, ", numThreads, numProcs);
     else {
       printf("**RESULTADO ERRADO**\n");
       exit(-1);
     }
     
     t3 = wall_time();
-    printf("tam=%d; tempos: init=%f, comp=%f, fim=%f, tot=%f \n", 
+    printf("tam: %d, tempos: { init: %f, comp: %f, fim: %f, tot: %f }},\n", 
 	   tam, t1-t0, t2-t1, t3-t2, t3-t0);
     free(tabulIn);
     free(tabulOut);
   }
+  printf("]");
   exit(0);    
 }

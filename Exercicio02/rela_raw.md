@@ -71,9 +71,9 @@ Tabelas de Tempo de Execução e Speed-Ups
 
 | Threads | Tempo (s) | Speed-Up |
 | ------- | --------- | -------- |
-| 1       | 0   | -        |
-| 2       | 0   | NaN   |
-| 4       | 0   | NaN   |
+| 1       | time8-1   | -        |
+| 2       | time8-2   | sup8-2   |
+| 4       | time8-4   | sup8-4   |
 | 8       | time8-8   | sup8-8   |
 | 16      | time8-16  | sup8-16  |
 
@@ -81,9 +81,9 @@ Tabelas de Tempo de Execução e Speed-Ups
 
 | Threads | Tempo (s) | Speed-Up |
 | ------- | --------- | -------- |
-| 1       | 0  | -        |
-| 2       | 0  | NaN  |
-| 4       | 0  | NaN  |
+| 1       | time16-1  | -        |
+| 2       | time16-2  | sup16-2  |
+| 4       | time16-4  | sup16-4  |
 | 8       | time16-8  | sup16-8  |
 | 16      | time16-16 | sup16-16 |
 
@@ -91,9 +91,9 @@ Tabelas de Tempo de Execução e Speed-Ups
 
 | Threads | Tempo (s) | Speed-Up |
 | ------- | --------- | -------- |
-| 1       | 0.003  | -        |
-| 2       | 0.002  | 1.5  |
-| 4       | 0.002  | 1.5  |
+| 1       | time32-1  | -        |
+| 2       | time32-2  | sup32-2  |
+| 4       | time32-4  | sup32-4  |
 | 8       | time32-8  | sup32-8  |
 | 16      | time32-16 | sup32-16 |
 
@@ -101,9 +101,9 @@ Tabelas de Tempo de Execução e Speed-Ups
 
 | Threads | Tempo (s) | Speed-Up |
 | ------- | --------- | -------- |
-| 1       | 0.026  | -        |
-| 2       | 0.014  | 1.857142857142857  |
-| 4       | 0.016  | 1.625  |
+| 1       | time64-1  | -        |
+| 2       | time64-2  | sup64-2  |
+| 4       | time64-4  | sup64-4  |
 | 8       | time64-8  | sup64-8  |
 | 16      | time64-16 | sup64-16 |
 
@@ -111,9 +111,9 @@ Tabelas de Tempo de Execução e Speed-Ups
 
 | Threads | Tempo (s) | Speed-Up |
 | ------- | --------- | -------- |
-| 1       | 0.182 | -        |
-| 2       | 0.117 | 1.5555555555555554 |
-| 4       | 0.087 | 2.0919540229885056 |
+| 1       | time128-1 | -        |
+| 2       | time128-2 | sup128-2 |
+| 4       | time128-4 | sup128-4 |
 | 8       | time128-8 | sup128-8 |
 | 16      | time128-16| sup128-16|
 
@@ -121,9 +121,9 @@ Tabelas de Tempo de Execução e Speed-Ups
 
 | Threads | Tempo (s) | Speed-Up |
 | ------- | --------- | -------- |
-| 1       | 1.575 | -        |
-| 2       | 0.885 | 1.7796610169491525 |
-| 4       | 0.665 | 2.3684210526315788 |
+| 1       | time256-1 | -        |
+| 2       | time256-2 | sup256-2 |
+| 4       | time256-4 | sup256-4 |
 | 8       | time256-8 | sup256-8 |
 | 16      | time256-16| sup256-16|
 
@@ -131,9 +131,9 @@ Tabelas de Tempo de Execução e Speed-Ups
 
 | Threads | Tempo (s) | Speed-Up |
 | ------- | --------- | -------- |
-| 1       | 13.128 | -        |
-| 2       | 8.022 | 1.6364996260284217 |
-| 4       | 6.021 | 2.1803687095166917 |
+| 1       | time512-1 | -        |
+| 2       | time512-2 | sup512-2 |
+| 4       | time512-4 | sup512-4 |
 | 8       | time512-8 | sup512-8 |
 | 16      | time512-16| sup512-16|
 
