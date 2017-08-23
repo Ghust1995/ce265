@@ -24,7 +24,7 @@ let resultsBySize = results.reduce((reduced, result) => {
 // Populating rela
 let rela = fs.readFileSync('./rela_raw.md', 'utf-8');
 Object.keys(resultsBySize).forEach(size => {
-    var oneThreadTime = resultsBySize[size].find((res) => res.threads === 1).tempos.comp;
+    let oneThreadTime = resultsBySize[size].find((res) => res.threads === 1).tempos.comp;
     resultsBySize[size].forEach(val => {
         let tam = val.tam;
         let threads = val.threads;
@@ -41,23 +41,44 @@ Object.keys(resultsBySize).forEach(size => {
 fs.writeFileSync('./rela.md', rela);
 
 // Graph creation
-const ChartjsNode = require('chartjs-node');
+const plotly = require('plotly')("ghust1995", "U0S5LTwnNH84fibf8Bdz")
 const _ = require('lodash');
 
-let chartData =_.mapValues(resultsBySize, (results) => {
+let graphData =_.map(resultsBySize, (results, board_size) => {
     results.sort((a, b) => a.threads - b.threads)
-    return results.map((result) => result.speedup || 1);
+    return {
+        x: THREAD_OPTIONS,
+        y: results.map((result) => result.speedup || 1),
+        type: "scatter",
+        name: `${board_size}x${board_size}`,
+    };
 });
 
-console.log(chartData);
-
-var chart = new ChartjsNode(500, 500);
-
-chartOptions = {
-    data: {
-        labels: THREAD_OPTIONS,
-        datasets: chartData,
-    }
+let graphOptions = {
+    filename: 'ce265ex02-speedup', 
+    fileopt: 'overwrite',
 };
-chart.drawChart(chartOptions)
-    .then(() => chart.writeImageToFile('image/png', './speedup.png'))
+
+let graphLayout = {
+    title: 'Speedup Pelo Numero de Threads para Diferentes Tamanhos De Tabuleiro no Jogo da Vida',
+}
+
+let figure = { 
+    data: graphData,
+    options: graphOptions,
+    layout: graphLayout,
+};
+
+{ // Plot Given figure
+    let imgOpts = {
+        format: 'png',
+        width: 1000,
+        height: 500,
+    };
+    plotly.getImage(figure, imgOpts, function (error, imageStream) {
+        if (error) return console.log (error);
+
+        var fileStream = fs.createWriteStream('speedup.png');
+        imageStream.pipe(fileStream);
+    });
+}
