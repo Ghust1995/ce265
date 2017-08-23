@@ -1,9 +1,10 @@
+
 COMP=-c
 
 #CC=icc
 #CCFLAGS= -qopenmp -qopt-report-phase=openmp
-CC=cl
-CCFLAGS= -openmp
+CC=gcc
+CCFLAGS= -fopenmp
 CCLOAD= $(CCFLAGS)
 
 EXEC1=Tempo.exe

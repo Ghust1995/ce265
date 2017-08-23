@@ -1,5 +1,8 @@
+#ifdef _WIN32
 #include <time.h>
-#include <stdio.h>
+#else
+#include <sys/time.h>
+#endif
 
 double wall_time(void)
 {

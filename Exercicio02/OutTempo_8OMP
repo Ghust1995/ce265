@@ -1,0 +1,8 @@
+module.exports = [{ threads: 8, procs: 24, tam: 8, tempos: { init: 0.000001, comp: 0.000339, fim: 0.000006, tot: 0.000346 }},
+{ threads: 8, procs: 24, tam: 16, tempos: { init: 0.000003, comp: 0.000590, fim: 0.000002, tot: 0.000595 }},
+{ threads: 8, procs: 24, tam: 32, tempos: { init: 0.000008, comp: 0.003413, fim: 0.000005, tot: 0.003426 }},
+{ threads: 8, procs: 24, tam: 64, tempos: { init: 0.000024, comp: 0.021967, fim: 0.000015, tot: 0.022006 }},
+{ threads: 8, procs: 24, tam: 128, tempos: { init: 0.000110, comp: 0.144506, fim: 0.000057, tot: 0.144673 }},
+{ threads: 8, procs: 24, tam: 256, tempos: { init: 0.000474, comp: 0.386641, fim: 0.000225, tot: 0.387340 }},
+{ threads: 8, procs: 24, tam: 512, tempos: { init: 0.001925, comp: 2.867999, fim: 0.000884, tot: 2.870808 }},
+]
