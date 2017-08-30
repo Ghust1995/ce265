@@ -150,10 +150,10 @@ int main(int argc, char *argv[]) {
 
   // mede tempo, imprime quantos primos, retorna area e imprime tempos
 
-  printf("Encontrou %ld primos de 2 a %ld\n", quantosPrimos(primos,indMax), numMax);
+  //printf("Encontrou %ld primos de 2 a %ld\n", quantosPrimos(primos,indMax), numMax);
   free(primos);
   ttot = wall_time()-tstart;
-  printf("Threads=%d, Tempos: total=%lf, init=%lf, comp=%lf, resto=%lf\n",
+  printf("module.exports = {threads: %d, tempos: {total: %lf, init: %lf, comp: %lf, resto: %lf }}\n",
       numThreads, ttot, tinit, tcomp, ttot-tinit-tcomp);
   exit(0);
 }

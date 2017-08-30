@@ -1,0 +1,9 @@
+module.exports = {
+    threads: 1,
+    tempos: {
+        total: 0.941000,
+        init: 0.162000,
+        comp: 0.760000,
+        resto: 0.019000 
+    }
+}
