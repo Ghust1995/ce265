@@ -1,0 +1,1 @@
+module.exports = {threads: 12, tempos: {total: 10.537874, init: 2.716598, comp: 7.734047, resto: 0.087229 }}

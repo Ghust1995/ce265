@@ -2,7 +2,7 @@ COMP=-c
 
 CC=gcc
 CCFLAGS=-fopenmp
-CCLOAD= $(CCFLAGS) -lm
+CCLOAD= $(CCFLAGS) -lm -o3
 
 EXEC=Crivo.exe
 

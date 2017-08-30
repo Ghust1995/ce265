@@ -16,7 +16,7 @@ export OmpMpi=$2
 DirBase=`pwd`
 Exec=${DirBase}/Crivo.exe
 Job=C_${OmpMpi}
-ArqSaida=${DirBase}/Out_Crivo_${OmpMpi}_OMP
+ArqSaida=${DirBase}/Out_Crivo_${OmpMpi}_OMP_O3
 #
 # gera arquivo ssub.sh
 #
