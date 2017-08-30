@@ -1,2 +1,1 @@
-slurmstepd: execve(): /scratch/ce2652016/gustavo.guimaraes/ce265/Exercicio03/Crivo.exe: No such file or directory
-srun: error: sdumont1130: task 0: Exited with exit code 2
+module.exports = {threads: 1, tempos: {total: 11.384714, init: 1.197881, comp: 10.105286, resto: 0.081547 }}
