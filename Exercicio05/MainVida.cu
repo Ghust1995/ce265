@@ -93,6 +93,8 @@ int main(int argc, char *argv[]) {
   // aloca e inicializa tabuleiros
   int* tabulIn_d;
   int* tabulOut_d;
+  cudaMalloc( (void **) &tabulIn_d, size*sizeof(int));
+  cudaMalloc( (void **) &tabulOut_d, size*sizeof(int));
 
   t0 = wall_time();
   tabulIn  = (int *) malloc (size);
@@ -145,6 +147,8 @@ int main(int argc, char *argv[]) {
 
   free(tabulIn);
   free(tabulOut);
+  cudaFree(tabulIn_d);
+  cudaFree(tabulOut_d);
 
   exit(0);    
 }

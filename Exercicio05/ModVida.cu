@@ -16,8 +16,8 @@
 __global__ void UmaVidaGpu(int* tabulIn, int* tabulOut, int tam) {
   int i, j;
   int vizviv;
-  int i = threadIdx.x + blockIdx.x * blockDim.x + 1;
-  int j = threadIdx.y + blockIdx.y * blockDim.y + 1;
+  i = threadIdx.x + blockIdx.x * blockDim.x + 1;
+  j = threadIdx.y + blockIdx.y * blockDim.y + 1;
   
   //for (i=1; i<=tam; i++) {
     //for (j= 1; j<=tam; j++) {
