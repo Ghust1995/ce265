@@ -1,1 +1,32 @@
-srun: error: sdumont3064: task 0: Segmentation fault
+Inicial CPU; Dump posicoes [1:4, 1:4] de tabuleiro 256 x 256
+=====
+.X..
+..X.
+XXX.
+....
+=====
+Final CPU; Dump posicoes [253:256, 253:256] de tabuleiro 256 x 256
+=====
+....
+..X.
+...X
+.XXX
+=====
+**RESULTADO CORRETO NA CPU**
+tam=256; tempos na CPU: init=0.000638, comp=0.239543, fim=0.000023, tot=0.240204 
+Inicial GPU; Dump posicoes [1:4, 1:4] de tabuleiro 256 x 256
+=====
+.X..
+..X.
+XXX.
+....
+=====
+Final GPU; Dump posicoes [253:256, 253:256] de tabuleiro 256 x 256
+=====
+....
+..X.
+...X
+.XXX
+=====
+**RESULTADO CORRETO NA GPU**
+tam=256; tempos na GPU: init=0.001125, comp=0.005926, fim=0.053593, tot=0.060644 

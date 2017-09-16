@@ -19,7 +19,7 @@ ExecutableName=Vida.exe
 # job name 
 #
 RunName=V_${TB}X${NB}
-OutName=${BaseRunName}_${TB}X${NB}.out
+OutName=${BaseRunName}2_${TB}X${NB}.js
 #
 # directories
 # executable full path

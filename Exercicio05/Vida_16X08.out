@@ -1,0 +1,32 @@
+Inicial CPU; Dump posicoes [1:4, 1:4] de tabuleiro 128 x 128
+=====
+.X..
+..X.
+XXX.
+....
+=====
+Final CPU; Dump posicoes [125:128, 125:128] de tabuleiro 128 x 128
+=====
+....
+..X.
+...X
+.XXX
+=====
+**RESULTADO CORRETO NA CPU**
+tam=128; tempos na CPU: init=0.000398, comp=0.027583, fim=0.000007, tot=0.027988 
+Inicial GPU; Dump posicoes [1:4, 1:4] de tabuleiro 128 x 128
+=====
+.X..
+..X.
+XXX.
+....
+=====
+Final GPU; Dump posicoes [125:128, 125:128] de tabuleiro 128 x 128
+=====
+....
+..X.
+...X
+.XXX
+=====
+**RESULTADO CORRETO NA GPU**
+tam=128; tempos na GPU: init=0.000758, comp=0.003497, fim=0.007110, tot=0.011365 
