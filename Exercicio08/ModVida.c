@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "mpi.h"
 #define ind2d(i,j) (i)*(tam+2)+j
 #define ALIVE 1
 #define DEAD 0
@@ -51,20 +52,20 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam) {
 
 
 void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLocal, int linha, int myId, int numProc) {
-  int i;
+  int i, l, ij, k;
 
   if(myId == 0) {
     printf("%s; Dump posicoes [%d:%d, %d:%d] de tabuleiro %d x %d\n", msg, first, last, first, last, tam, tam);
     for (i=first; i<=last; i++) printf("="); printf("=\n");
   }
-  for (int l = first; l <= last; l++) {
-    i=ind2d(l);
+  for (l = first; l <= last; l++) {
+    i=ind2d(l, 0);
     // Determinar para linha atual qual a thread que vai mandar mensagem
     if (myId == 0) {
       // Arrumar
       if (l < linha + tamLocal) {
         // Caso dentro dos dados da thread 0
-        for (int ij = i + first; ij < i + last; ij++) {
+        for (ij = i + first; ij < i + last; ij++) {
           printf("%c", tabul[ij]? 'X' : '.');
         }
 
@@ -83,7 +84,7 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
             MPI_COMM_WORLD,
             MPI_STATUS_IGNORE); 
 
-        for (int k = 0; k < last - first; k++) {
+        for (k = 0; k < last - first; k++) {
           printf("%c", linhaOutro[k]? 'X' : '.');
         }
 
@@ -92,7 +93,7 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
     }
     else { // Not main process
       // Arrumar
-      int * linha = (int *) malloc (tam + 2) * sizeof(int);
+      int * linha = (int *) malloc ((tam + 2) * sizeof(int));
       for (int k = 0; k < last - first; k++) {
         linha[k] = tabul[ind2d(l - linha, k + first)];
       }
