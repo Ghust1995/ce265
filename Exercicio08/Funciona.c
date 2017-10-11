@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "mpi.h"
 
-void InitTabul(int* , int* , int , int , int ){
+void InitTabul(int* , int* , int , int , int );
 void DumpTabul(int * , int , int , int , char* , int , int , int , int );
 void UmaVida(int*, int*, int);
 int Correto(int*, int);
