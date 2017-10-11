@@ -50,8 +50,6 @@ int main(int argc, char *argv[]) {
     DumpTabul(tabulIn, tam, 1, tam, "Inicial", tamLocal, linha, myId, numProc);
   }
 
-
-
   // for (i=0; i<2*(tam-3); i++) {
 
     // UmaVida(tabulIn, tabulOut, tam);
