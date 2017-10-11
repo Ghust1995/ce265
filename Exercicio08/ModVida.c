@@ -93,12 +93,12 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
     }
     else { // Not main process
       // Arrumar
-      int * linha = (int *) malloc ((tam + 2) * sizeof(int));
-      for (int k = 0; k < last - first; k++) {
-        linha[k] = tabul[ind2d(l - linha, k + first)];
+      int * linhaSend = (int *) malloc ((tam + 2) * sizeof(int));
+      for (k = 0; k < last - first; k++) {
+        linhaSend[k] = tabul[ind2d(l - linhaSend, k + first)];
       }
       MPI_Send(
-          &linha, 
+          &linhaSend, 
           (tam + 2),
           MPI_INT, 
           0, 
@@ -113,7 +113,7 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
 }
 
 
-void SetTabul(int* tabul, int tamLocal, int linha, int i, int j, int val){
+void SetTabul(int* tabul, int tam, int tamLocal, int linha, int i, int j, int val){
   if(i >= linha - 1 && i <= linha + tamLocal){
     tabul[ind2d(i - linha, j)] = val;
   }
@@ -131,11 +131,11 @@ void InitTabul(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha){
     tabulOut[ij] = 0;
   }
 
-  SetTabul(tabulIn, tamLocal, linha, 1, 2, ALIVE);
-  SetTabul(tabulIn, tamLocal, linha, 2, 3, ALIVE);
-  SetTabul(tabulIn, tamLocal, linha, 3, 1, ALIVE);
-  SetTabul(tabulIn, tamLocal, linha, 3, 2, ALIVE);
-  SetTabul(tabulIn, tamLocal, linha, 3, 3, ALIVE);
+  SetTabul(tabulIn, tam, tamLocal, linha, 1, 2, ALIVE);
+  SetTabul(tabulIn, tam, tamLocal, linha, 2, 3, ALIVE);
+  SetTabul(tabulIn, tam, tamLocal, linha, 3, 1, ALIVE);
+  SetTabul(tabulIn, tam, tamLocal, linha, 3, 2, ALIVE);
+  SetTabul(tabulIn, tam, tamLocal, linha, 3, 3, ALIVE);
 }
 
 // Correto: Verifica se a configuracao final do tabuleiro
