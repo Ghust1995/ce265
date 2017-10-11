@@ -95,7 +95,7 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
       // Arrumar
       int * linhaSend = (int *) malloc ((tam + 2) * sizeof(int));
       for (k = 0; k < last - first; k++) {
-        linhaSend[k] = tabul[ind2d(l - linhaSend, k + first)];
+        linhaSend[k] = tabul[ind2d(l - linha, k + first)];
       }
       MPI_Send(
           &linhaSend, 

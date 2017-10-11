@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "mpi.h"
 
-void InitTabul(int* , int* , int , int , int ){
+void InitTabul(int* , int* , int , int , int );
 void DumpTabul(int * , int , int , int , char* , int , int , int , int );
 void UmaVida(int*, int*, int);
 int Correto(int*, int);
@@ -43,10 +43,12 @@ int main(int argc, char *argv[]) {
     // aloca e inicializa tabuleiros
     tabulIn  = (int *) malloc ((tamLocal+2)*(tam+2)*sizeof(int));
     tabulOut = (int *) malloc ((tamLocal+2)*(tam+2)*sizeof(int));
+printf("Inicializando tabuleiro");
     InitTabul(tabulIn, tabulOut, tam, tamLocal, linha);
 
 
     // dump tabuleiro inicial
+printf("Printando tabuleiro");
     DumpTabul(tabulIn, tam, 1, tam, "Inicial", tamLocal, linha, myId, numProc);
   }
 
