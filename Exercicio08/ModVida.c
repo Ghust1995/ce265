@@ -66,7 +66,8 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
       if (l < linha + tamLocal) {
         // Caso dentro dos dados da thread 0
         for (ij = i + first; ij < i + last; ij++) {
-          printf("%c", tabul[ij]? 'X' : '.');
+          printf("ELEMENTO PROPRIO");
+          //printf("%c", tabul[ij]? 'X' : '.');
         }
 
         printf("\n");
@@ -85,7 +86,8 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
             MPI_STATUS_IGNORE); 
 
         for (k = 0; k < last - first; k++) {
-          printf("%c", linhaOutro[k]? 'X' : '.');
+          printf("ELEMENTO RECEBIDO");
+          //printf("%c", linhaOutro[k]? 'X' : '.');
         }
 
         printf("\n");
@@ -95,7 +97,8 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
       // Arrumar
       int * linhaSend = (int *) malloc ((tam + 2) * sizeof(int));
       for (k = 0; k < last - first; k++) {
-        linhaSend[k] = tabul[ind2d(l - linha, k + first)];
+        linhaSend[k] = 0
+        //linhaSend[k] = tabul[ind2d(l - linha, k + first)];
       }
       MPI_Send(
           &linhaSend, 
