@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "mpi.h"
 
-void InitTabul(int*, int*, int);
-void DumpTabul(int*, int, int, int, char*);
+void InitTabul(int* , int* , int , int , int ){
+void DumpTabul(int * , int , int , int , char* , int , int , int , int );
 void UmaVida(int*, int*, int);
 int Correto(int*, int);
 
@@ -27,25 +27,30 @@ int main(int argc, char *argv[]) {
   if (numProc <= tam)
   {
     int tamLocal = tam/numProc;
-    // Espalhar o resto
-    if(myId < tam % numProc) {
-      tamLocal++;
+    // O resto vai ser colocado no processo 0
+    if (myId == 0) {
+      tamLocal += tam % numProc;
     }
 
     // Determinar a linha inicial do processo
     int linha = myId * (tam/numProc);
     // Somar os restos
-    linha += min(myId, tam % numProc);
+    if (myId != 0) {
+      linha += tam % numProc;
+    }
+
 
     // aloca e inicializa tabuleiros
     tabulIn  = (int *) malloc ((tamLocal+2)*(tam+2)*sizeof(int));
     tabulOut = (int *) malloc ((tamLocal+2)*(tam+2)*sizeof(int));
     InitTabul(tabulIn, tabulOut, tam, tamLocal, linha);
+
+
+    // dump tabuleiro inicial
+    DumpTabul(tabulIn, tam, 1, tam, "Inicial", tamLocal, linha, myId, numProc);
   }
 
-  // // dump tabuleiro inicial
 
-  // DumpTabul(tabulIn, tam, 1, tam, "Inicial");
 
   // for (i=0; i<2*(tam-3); i++) {
 

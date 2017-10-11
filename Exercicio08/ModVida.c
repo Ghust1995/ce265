@@ -43,21 +43,6 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam) {
   }
 }
 
-
-def printTabs():
-...     for d in data:
-...             str = ''
-...             it = 0
-...             for x in data[d]['tab']:
-...                     s = s + str(x) + ' '
-...                     it = it + 1
-...                     if it >= tam:
-...                             it = 0
-...                             print(s)
-...                             s = ''
-...             print('--')
-...
-
 // DumpTabul: Imprime trecho do tabuleiro entre
 //            as posicoes (first,first) e (last,last)
 //            X representa celula viva
@@ -65,39 +50,72 @@ def printTabs():
 
 
 
-void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLocal, int linha, int myId, int numProcs) {
-  int i, ij;
+void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLocal, int linha, int myId, int numProc) {
+  int i;
 
-  printf("%s; Dump posicoes [%d:%d, %d:%d] de tabuleiro %d x %d\n", msg, first, last, first, last, tam, tam);
-  for (i=first; i<=last; i++) printf("="); printf("=\n");
-  //for (i=ind2d(first,0); i<=ind2d(last,0); i+=ind2d(1,0)) {
-  for (l=first; i<=last; i+=1) {
+  if(myId == 0) {
+    printf("%s; Dump posicoes [%d:%d, %d:%d] de tabuleiro %d x %d\n", msg, first, last, first, last, tam, tam);
+    for (i=first; i<=last; i++) printf("="); printf("=\n");
+  }
+  for (int l = first; l <= last; l++) {
     i=ind2d(l);
-    int ownerId = 0;
     // Determinar para linha atual qual a thread que vai mandar mensagem
-    if (l >= linha && l < linha + tamLocal) {
-
-    }
     if (myId == 0) {
       // Arrumar
-      MPI_Recv(&otherId, 1, MPI_INT, otherProc, tag, MPI_COMM_WORLD, &status); 
+      if (l < linha + tamLocal) {
+        // Caso dentro dos dados da thread 0
+        for (int ij = i + first; ij < i + last; ij++) {
+          printf("%c", tabul[ij]? 'X' : '.');
+        }
+
+        printf("\n");
+      }
+      else {
+        // Caso recebendo de algum lugar
+        int * linhaOutro;
+
+        MPI_Recv(
+            &linhaOutro, 
+            (tam + 2),
+            MPI_INT,
+            (l - tamLocal) / (tam/numProc) + 1, // Processo atual considerando resto no primeiro
+            0,
+            MPI_COMM_WORLD,
+            MPI_STATUS_IGNORE); 
+
+        for (int k = 0; k < last - first; k++) {
+          printf("%c", linhaOutro[k]? 'X' : '.');
+        }
+
+        printf("\n");
+      }
     }
-    else {
+    else { // Not main process
       // Arrumar
-      MPI_Send(&myId, 1, MPI_INT, otherProc, tag, MPI_COMM_WORLD); 
+      int * linha = (int *) malloc (tam + 2) * sizeof(int);
+      for (int k = 0; k < last - first; k++) {
+        ij = k + i + first;
+        linha[k] = tabul[ij];
+      }
+      MPI_Send(
+          &linha, 
+          (tam + 2),
+          MPI_INT, 
+          0, 
+          0, 
+          MPI_COMM_WORLD); 
     }
 
-    for (ij=i+first; ij<=i+last; ij++)
-      printf("%c", tabul[ij]? 'X' : '.');
-    printf("\n");
   }
-  for (i=first; i<=last; i++) printf("="); printf("=\n");
+  if(myId == 0) {
+    for (i=first; i<=last; i++) printf("="); printf("=\n");
+  }
 }
 
 
 void SetTabul(int* tabul, int tamLocal, int linha, int i, int j, int val){
   if(i >= linha - 1 && i <= linha + tamLocal){
-    tabul[ind2d(i - linha, j] = val;
+    tabul[ind2d(i - linha, j)] = val;
   }
 }
 
