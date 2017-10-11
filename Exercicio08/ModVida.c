@@ -66,7 +66,7 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
       if (l < linha + tamLocal) {
         // Caso dentro dos dados da thread 0
         for (ij = i + first; ij < i + last; ij++) {
-          printf("ELEMENTO PROPRIO");
+          printf("P ");
           //printf("%c", tabul[ij]? 'X' : '.');
         }
 
@@ -76,17 +76,19 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
         // Caso recebendo de algum lugar
         int * linhaOutro;
 
+        int processo = (l - tamLocal) / (tam/numProc) + 1;
+
         MPI_Recv(
             &linhaOutro, 
             (tam + 2),
             MPI_INT,
-            (l - tamLocal) / (tam/numProc) + 1, // Processo atual considerando resto no primeiro
+            processo, // Processo atual considerando resto no primeiro
             0,
             MPI_COMM_WORLD,
             MPI_STATUS_IGNORE); 
 
         for (k = 0; k < last - first; k++) {
-          printf("ELEMENTO RECEBIDO");
+          printf("Recebido de %d ", processo);
           //printf("%c", linhaOutro[k]? 'X' : '.');
         }
 
