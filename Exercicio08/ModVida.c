@@ -155,17 +155,75 @@ void InitTabul(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha){
 
 
 
-int Correto(int* tabul, int tam){
+int Correto(int* tabul, int tam, int myId, int tamLocal, int linha){
   int ij, cnt;
 
-  cnt = 0;
-  for (ij=0; ij<(tam+2)*(tam+2); ij++)
-    cnt = cnt + tabul[ij];
+  int linhaInicio = max(linha - 1, 0); // Ghost zone
+  int linhaFinal = min(linha + tamLocal, tam); // Ghost zone
 
-  return (cnt == 5 &&
-      tabul[ind2d(tam-2,tam-1)] &&
-      tabul[ind2d(tam-1,tam  )] &&
-      tabul[ind2d(tam  ,tam-2)] &&
-      tabul[ind2d(tam  ,tam-1)] &&
-      tabul[ind2d(tam  ,tam  )]);
+  int isCorreto = 0;
+
+  int linhaTeste;
+  // Testar correcao de uma linha
+  for (linhaTeste = linhaInicio; linhaTeste <= linhaFinal, linhaTeste++)
+  {
+    cnt = 0;
+    for (ij = ind2d(linhaTeste, 0); ij < (ind2d(linhaTeste, 0) + (tam + 2)); ij++) {
+      cnt = cnt + tabul[ij];
+    }
+
+    switch(linhaTeste)
+    {
+      case tam:
+        isCorreto = 
+          cnt == 3 && 
+          tabul[ind2d(linhaTeste - linha, tam)] &&
+          tabul[ind2d(linhaTeste - linha, tam-1)] &&
+          tabul[ind2d(linhaTeste - linha, tam-2)];
+        break;
+      case tam-1:
+        isCorreto = 
+          cnt == 1 && 
+          tabul[ind2d(linhaTeste - linha, tam)];
+        break;
+      case tam-2:
+        isCorreto = 
+          cnt == 1 && 
+          tabul[ind2d(linhaTeste - linha, tam-1)];
+        break;
+      default:
+        isCorreto = cnt == 0;
+        break;
+    }
+  }
+
+  if(myId == 0) {
+    int processo = 1;
+    for(processo = 1; processo <= numProc; processo++) {
+      MPI_Recv(
+          outroCorreto,
+          1,
+          MPI_INT,
+          processo, // Processo atual considerando resto no primeiro
+          0,
+          MPI_COMM_WORLD,
+          MPI_STATUS_IGNORE);
+
+      isCorreto = isCorreto && outroCorreto;
+    }
+    if (isCorreto) 
+      printf("Resultado final está correto!")
+    else
+      printf("Resultado final está incorreto!")
+  }
+  else
+  {
+    MPI_Send(
+        isCorreto,
+        1,
+        MPI_INT,
+        0,
+        0,
+        MPI_COMM_WORLD);
+  }
 }
