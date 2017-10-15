@@ -4,6 +4,8 @@
 #define ind2d(i,j) (i)*(tam+2)+j
 #define ALIVE 1
 #define DEAD 0
+#define max(a, b) a > b ? a : b
+#define min(a, b) a < b ? a : b
 
 double wall_time(void);
 
@@ -126,7 +128,7 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
 
 
 void SetTabul(int* tabul, int tam, int tamLocal, int linha, int i, int j, int val){
-  if(i >= linha && i <= linha + tamLocal){
+  if(i >= linha - 1 && i <= linha + tamLocal + 1){
     tabul[ind2d(i - linha, j)] = val;
   }
 }
@@ -143,11 +145,19 @@ void InitTabul(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha){
     tabulOut[ij] = 0;
   }
 
+  SetTabul(tabulIn, tam, tamLocal, linha, 1 + tam/2, 2 + tam/2, ALIVE);
+  SetTabul(tabulIn, tam, tamLocal, linha, 2 + tam/2, 3 + tam/2, ALIVE);
+  SetTabul(tabulIn, tam, tamLocal, linha, 3 + tam/2, 1 + tam/2, ALIVE);
+  SetTabul(tabulIn, tam, tamLocal, linha, 3 + tam/2, 2 + tam/2, ALIVE);
+  SetTabul(tabulIn, tam, tamLocal, linha, 3 + tam/2, 3 + tam/2, ALIVE);
+
+/*
   SetTabul(tabulIn, tam, tamLocal, linha, 1, 2, ALIVE);
   SetTabul(tabulIn, tam, tamLocal, linha, 2, 3, ALIVE);
   SetTabul(tabulIn, tam, tamLocal, linha, 3, 1, ALIVE);
   SetTabul(tabulIn, tam, tamLocal, linha, 3, 2, ALIVE);
   SetTabul(tabulIn, tam, tamLocal, linha, 3, 3, ALIVE);
+*/
 }
 
 // Correto: Verifica se a configuracao final do tabuleiro
@@ -155,75 +165,56 @@ void InitTabul(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha){
 
 
 
-int Correto(int* tabul, int tam, int myId, int tamLocal, int linha){
+int Correto(int* tabul, int tam, int myId, int tamLocal, int linha, int numProc) {
   int ij, cnt;
 
-  int linhaInicio = max(linha - 1, 0); // Ghost zone
-  int linhaFinal = min(linha + tamLocal, tam); // Ghost zone
+  int linhaInicio = max(linha, 0); // Ghost zone
+  int linhaFinal = min(linha + tamLocal + 1, tam + 1); // Ghost zone
 
   int isCorreto = 0;
 
   int linhaTeste;
   // Testar correcao de uma linha
-  for (linhaTeste = linhaInicio; linhaTeste <= linhaFinal, linhaTeste++)
+  for (linhaTeste = linhaInicio; linhaTeste <= linhaFinal; linhaTeste++)
   {
     cnt = 0;
-    for (ij = ind2d(linhaTeste, 0); ij < (ind2d(linhaTeste, 0) + (tam + 2)); ij++) {
-      cnt = cnt + tabul[ij];
+    for (ij = 0; ij < tam + 2; ij++) {
+      cnt = cnt + tabul[ind2d(linhaTeste - linha, ij)];
     }
 
-    switch(linhaTeste)
-    {
-      case tam:
+      if (linhaTeste == tam)
         isCorreto = 
           cnt == 3 && 
           tabul[ind2d(linhaTeste - linha, tam)] &&
           tabul[ind2d(linhaTeste - linha, tam-1)] &&
           tabul[ind2d(linhaTeste - linha, tam-2)];
-        break;
-      case tam-1:
+      else if( linhaTeste == tam-1)
         isCorreto = 
           cnt == 1 && 
           tabul[ind2d(linhaTeste - linha, tam)];
-        break;
-      case tam-2:
+      else if (linhaTeste == tam-2)
         isCorreto = 
           cnt == 1 && 
           tabul[ind2d(linhaTeste - linha, tam-1)];
-        break;
-      default:
+      else
         isCorreto = cnt == 0;
-        break;
+
+      printf("processo %d testando linha %d, linha %s, count %d \n", myId, linhaTeste, isCorreto ? "CORRETA" : "INCORRETA", cnt);
     }
-  }
+    int *corretos = (int*) malloc (numProc * sizeof(int));
+      MPI_Gather(
+          &isCorreto, 1, MPI_INT,
+          corretos, 1, MPI_INT,
+          0, MPI_COMM_WORLD);
 
-  if(myId == 0) {
+  if (myId == 0) {
     int processo = 1;
-    for(processo = 1; processo <= numProc; processo++) {
-      MPI_Recv(
-          outroCorreto,
-          1,
-          MPI_INT,
-          processo, // Processo atual considerando resto no primeiro
-          0,
-          MPI_COMM_WORLD,
-          MPI_STATUS_IGNORE);
-
-      isCorreto = isCorreto && outroCorreto;
+    for(processo = 1; processo < numProc; processo++) {
+          isCorreto = isCorreto && corretos[processo];
     }
     if (isCorreto) 
-      printf("Resultado final está correto!")
+      printf("Resultado final está correto! \n");
     else
-      printf("Resultado final está incorreto!")
-  }
-  else
-  {
-    MPI_Send(
-        isCorreto,
-        1,
-        MPI_INT,
-        0,
-        0,
-        MPI_COMM_WORLD);
-  }
+      printf("Resultado final está incorreto! \n");
+  } 
 }

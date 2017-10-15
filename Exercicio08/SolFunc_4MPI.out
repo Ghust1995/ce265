@@ -1,9 +1,24 @@
+processo 2 testando linha 4, linha CORRETA, count 1 
+processo 2 testando linha 5, linha CORRETA, count 1 
+processo 2 testando linha 6, linha CORRETA, count 3 
+processo 3 testando linha 5, linha CORRETA, count 1 
+processo 3 testando linha 6, linha CORRETA, count 3 
+processo 3 testando linha 7, linha CORRETA, count 0 
+processo 1 testando linha 3, linha CORRETA, count 0 
+processo 1 testando linha 4, linha CORRETA, count 1 
+processo 1 testando linha 5, linha CORRETA, count 1 
 Inicial; Dump posicoes [1:6, 1:6] de tabuleiro 6 x 6
 =======
-.X....
-..X...
-XXX...
 ......
 ......
 ......
+....X.
+.....X
+...XXX
 =======
+processo 0 testando linha 0, linha CORRETA, count 0 
+processo 0 testando linha 1, linha CORRETA, count 0 
+processo 0 testando linha 2, linha CORRETA, count 0 
+processo 0 testando linha 3, linha CORRETA, count 0 
+processo 0 testando linha 4, linha CORRETA, count 1 
+Resultado final está correto! 
