@@ -62,24 +62,22 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
     i=ind2d(l, 0);
     // Determinar para linha atual qual a thread que vai mandar mensagem
     if (myId == 0) {
-      // Arrumar
-      if (l < linha + tamLocal) {
+      if (l < linha + tamLocal + 1) {
         // Caso dentro dos dados da thread 0
-        for (ij = i + first; ij < i + last; ij++) {
-          printf("P ");
-          //printf("%c", tabul[ij]? 'X' : '.');
+        for (ij = i + first; ij <= i + last; ij++) {
+          printf("%c", tabul[ij]? 'X' : '.');
         }
 
         printf("\n");
       }
       else {
         // Caso recebendo de algum lugar
-        int * linhaOutro;
+        int * linhaOutro = (int *) malloc ((tam + 2) * sizeof(int));
 
-        int processo = (l - tamLocal) / (tam/numProc) + 1;
+        int processo = (l - tamLocal - 1) / (tam/numProc) + 1;
 
         MPI_Recv(
-            &linhaOutro, 
+            linhaOutro, 
             (tam + 2),
             MPI_INT,
             processo, // Processo atual considerando resto no primeiro
@@ -87,28 +85,37 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
             MPI_COMM_WORLD,
             MPI_STATUS_IGNORE); 
 
-        for (k = 0; k < last - first; k++) {
-          printf("Recebido de %d ", processo);
-          //printf("%c", linhaOutro[k]? 'X' : '.');
+        for (k = 0; k <= last - first; k++) {
+          printf("%c", linhaOutro[k]? 'X' : '.');
         }
 
         printf("\n");
       }
     }
     else { // Not main process
-      // Arrumar
-      int * linhaSend = (int *) malloc ((tam + 2) * sizeof(int));
-      for (k = 0; k < last - first; k++) {
-        linhaSend[k] = 0;
-        //linhaSend[k] = tabul[ind2d(l - linha, k + first)];
+      if (l < linha + tamLocal && l >= linha) {
+	      // Arrumar
+	      int * linhaSend = (int *) malloc ((tam + 2) * sizeof(int));
+	      for (k = 0; k <= tam+2; k++) {
+		linhaSend[k] = 0;
+	      }
+	      for (k = 0; k <= last - first; k++) {
+		linhaSend[k] = tabul[ind2d(l - linha + 1, k + first)];
+	      }
+		/*
+	      for (k = 0; k <= last - first; k++) {
+		printf("%d ", linhaSend[k]);
+	      }
+		printf("\n");
+		*/
+	      MPI_Send(
+		  linhaSend, 
+		  (tam + 2),
+		  MPI_INT, 
+		  0, 
+		  0, 
+		  MPI_COMM_WORLD); 
       }
-      MPI_Send(
-          &linhaSend, 
-          (tam + 2),
-          MPI_INT, 
-          0, 
-          0, 
-          MPI_COMM_WORLD); 
     }
 
   }
@@ -119,7 +126,7 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
 
 
 void SetTabul(int* tabul, int tam, int tamLocal, int linha, int i, int j, int val){
-  if(i >= linha - 1 && i <= linha + tamLocal){
+  if(i >= linha && i <= linha + tamLocal){
     tabul[ind2d(i - linha, j)] = val;
   }
 }

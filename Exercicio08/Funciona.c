@@ -43,13 +43,14 @@ int main(int argc, char *argv[]) {
     // aloca e inicializa tabuleiros
     tabulIn  = (int *) malloc ((tamLocal+2)*(tam+2)*sizeof(int));
     tabulOut = (int *) malloc ((tamLocal+2)*(tam+2)*sizeof(int));
-printf("Inicializando tabuleiro");
     InitTabul(tabulIn, tabulOut, tam, tamLocal, linha);
 
 
     // dump tabuleiro inicial
-printf("Printando tabuleiro");
     DumpTabul(tabulIn, tam, 1, tam, "Inicial", tamLocal, linha, myId, numProc);
+
+   free(tabulIn);
+   free(tabulOut);
   }
 
   // for (i=0; i<2*(tam-3); i++) {
@@ -68,8 +69,6 @@ printf("Printando tabuleiro");
   // else
     // printf("**RESULTADO ERRADO**\n");
 
-  // free(tabulIn);
-  // free(tabulOut);
 
   MPI_Finalize();
   exit(0);    
