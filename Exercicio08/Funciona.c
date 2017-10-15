@@ -5,7 +5,7 @@
 void InitTabul(int* , int* , int , int , int );
 void DumpTabul(int * , int , int , int , char* , int , int , int , int );
 void UmaVida(int*, int*, int);
-int Correto(int*, int);
+int Correto(int* , int , int , int , int );
 
 
 int main(int argc, char *argv[]) {
@@ -48,6 +48,7 @@ int main(int argc, char *argv[]) {
 
     // dump tabuleiro inicial
     DumpTabul(tabulIn, tam, 1, tam, "Inicial", tamLocal, linha, myId, numProc);
+    Correto(tabulIn, tam, myId, tamLocal, linha);
 
    free(tabulIn);
    free(tabulOut);
