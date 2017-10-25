@@ -121,6 +121,7 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
 
 void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLocal, int linha, int myId, int numProc) {
   int i, l, ij, k;
+  int * linhaSend, linhaOutro;
 
   if(myId == 0) {
     printf("%s; Dump posicoes [%d:%d, %d:%d] de tabuleiro %d x %d\n", msg, first, last, first, last, tam, tam);
@@ -140,7 +141,7 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
       }
       else {
         // Caso recebendo de algum lugar
-        int * linhaOutro = (int *) malloc ((tam + 2) * sizeof(int));
+        linhaOutro = (int *) malloc ((tam + 2) * sizeof(int));
 
         int processo = (l - tamLocal - 1) / (tam/numProc) + 1;
 
@@ -158,13 +159,12 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
         }
 
         printf("\n");
-	free(linhaOutro);
       }
     }
     else { // Not main process
       if (l < linha + tamLocal && l >= linha) {
         // Arrumar
-        int * linhaSend = (int *) malloc ((tam + 2) * sizeof(int));
+        linhaSend = (int *) malloc ((tam + 2) * sizeof(int));
         for (k = 0; k <= tam+2; k++) {
           linhaSend[k] = 0;
         }
@@ -185,7 +185,6 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
             0, 
             0, 
             MPI_COMM_WORLD);
-	free(linhaSend);
       }
     }
 
@@ -193,6 +192,8 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
   if(myId == 0) {
     for (i=first; i<=last; i++) printf("="); printf("=\n");
   }
+	free(linhaSend);
+	free(linhaOutro);
 }
 
 
@@ -271,7 +272,7 @@ int Correto(int* tabul, int tam, int myId, int tamLocal, int linha, int numProc)
 
     printf("processo %d testando linha %d, linha %s, count %d \n", myId, linhaTeste, isCorreto ? "CORRETA" : "INCORRETA", cnt);
   }
-  int *corretos = (int*) malloc (numProc * sizeof(int));
+  int * corretos = (int*) malloc (numProc * sizeof(int));
   MPI_Gather(
       &isCorreto, 1, MPI_INT,
       corretos, 1, MPI_INT,
