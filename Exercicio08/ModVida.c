@@ -22,55 +22,76 @@ double wall_time(void);
 void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int myId, int numProc) {
   int i, j;
   int vizviv;
-  
+
   for (i=1; i<=tamLocal; i++) {
     for (j= 1; j<=tam; j++) {
       vizviv = 
-	tabulIn[ind2d(i-1,j-1)] + 
-	tabulIn[ind2d(i-1,j  )] +
-	tabulIn[ind2d(i-1,j+1)] + 
-	tabulIn[ind2d(i  ,j-1)] + 
-	tabulIn[ind2d(i  ,j+1)] + 
-	tabulIn[ind2d(i+1,j-1)] + 
-	tabulIn[ind2d(i+1,j  )] + 
-	tabulIn[ind2d(i+1,j+1)];
+        tabulIn[ind2d(i-1,j-1)] + 
+        tabulIn[ind2d(i-1,j  )] +
+        tabulIn[ind2d(i-1,j+1)] + 
+        tabulIn[ind2d(i  ,j-1)] + 
+        tabulIn[ind2d(i  ,j+1)] + 
+        tabulIn[ind2d(i+1,j-1)] + 
+        tabulIn[ind2d(i+1,j  )] + 
+        tabulIn[ind2d(i+1,j+1)];
       if (tabulIn[ind2d(i,j)] && vizviv < 2) 
-	tabulOut[ind2d(i,j)] = 0;
+        tabulOut[ind2d(i,j)] = 0;
       else if (tabulIn[ind2d(i,j)] && vizviv > 3) 
-	tabulOut[ind2d(i,j)] = 0;
+        tabulOut[ind2d(i,j)] = 0;
       else if (!tabulIn[ind2d(i,j)] && vizviv == 3) 
-	tabulOut[ind2d(i,j)] = 1;
+        tabulOut[ind2d(i,j)] = 1;
       else
-	tabulOut[ind2d(i,j)] = tabulIn[ind2d(i,j)];
+        tabulOut[ind2d(i,j)] = tabulIn[ind2d(i,j)];
     }
   }
 
-  // Atualizar ghost zones
   // Mandar ghost zones
   // Envia linha 1 e linha tamLocal
+  int tagPrev = 10;
+  int tagNext = 20;
+  int * bufPrevSend = (int *) malloc(sizeof(int) * (tam + 2));
+  int * bufNextSend = (int *) malloc(sizeof(int) * (tam + 2));
+  int * bufPrevRecv = (int *) malloc(sizeof(int) * (tam + 2));
+  int * bufNextRecv = (int *) malloc(sizeof(int) * (tam + 2));
+  int msgCount = 0;
+  MPI_Request reqs[4];
+  MPI_Status stat[4];
+
+  if ( myId > 0 ) {
+    for (int j = 0; j < tam + 2; j++) {
+      bufPrevSend[j] = tabulOut[ind2d(1, j)];
+    }
+    MPI_Isend(
+        bufPrevSend,
+        tam,
+        MPI_INT,
+        myId - 1,
+        tagPrev,
+        MPI_COMM_WORLD,
+        &reqs[msgCount++]);
+  }
+
+  if (myId < numProc - 1) { 
+    for (int j = 0; j < tam + 2; j++) {
+      bufNextSend[j] = tabulOut[ind2d(tamLocal, j)];
+    }
+    MPI_Isend(
+        bufNextSend,
+        tam,
+        MPI_INT,
+        myId + 1,
+        tagNext,
+        MPI_COMM_WORLD,
+        &reqs[msgCount++]);
+  }
+
+  // atualizar ghost zones
   // Pegar ghost zones dos outros
   // Recebe em linha 0 e linha tamLocal + 1
 
-  int tagPrev = 10;
-  int tagNext = 20;
-  int msgCount = 0;
-  MPI_Request reqs[2];
-  MPI_Status stat[2];
-
-  if ( myId > 0 ) {
-    MPI_Isend(
-        tabulOut + ind2d(1, 0),
-        tam,
-        MPI_INT,
-        myId - 1,
-        tagPrev,
-        MPI_COMM_WORLD,
-        &reqs[msgCount++]);
-  }
-
   if (myId < numProc - 1) { 
     MPI_Irecv(
-        tabulOut + ind2d(0, 0),
+        bufNextRecv,
         tam,
         MPI_INT,
         myId + 1,
@@ -79,24 +100,9 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
         &reqs[msgCount++]);
   }
 
-  MPI_Waitall(msgCount, reqs, stat);
-  msgCount = 0;
-
- 
-  if (myId < numProc - 1) { 
-    MPI_Isend(
-        tabulOut + ind2d(tamLocal, 0),
-        tam,
-        MPI_INT,
-        myId + 1,
-        tagNext,
-        MPI_COMM_WORLD,
-        &reqs[msgCount++]);
-  }
-   
   if ( myId > 0 ) {
     MPI_Irecv(
-        tabulOut + ind2d(tamLocal + 1, 0),
+        bufPrevRecv,
         tam,
         MPI_INT,
         myId - 1,
@@ -106,6 +112,19 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
   }
 
   MPI_Waitall(msgCount, reqs, stat);
+
+  if ( myId > 0 ) {
+    for (int j = 0; j < tam + 2; j++) {
+      tabulOut[ind2d(0, j)] = bufPrevRecv[j];
+    }
+  }
+
+
+  if (myId < numProc - 1) { 
+    for (int j = 0; j < tam + 2; j++) {
+      tabulOut[ind2d(tamLocal + 1, j)] = bufPrevRecv[j];
+    }
+  }
 }
 
 // DumpTabul: Imprime trecho do tabuleiro entre
@@ -158,27 +177,27 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
     }
     else { // Not main process
       if (l < linha + tamLocal && l >= linha) {
-	      // Arrumar
-	      int * linhaSend = (int *) malloc ((tam + 2) * sizeof(int));
-	      for (k = 0; k <= tam+2; k++) {
-		linhaSend[k] = 0;
-	      }
-	      for (k = 0; k <= last - first; k++) {
-		linhaSend[k] = tabul[ind2d(l - linha + 1, k + first)];
-	      }
-		/*
-	      for (k = 0; k <= last - first; k++) {
-		printf("%d ", linhaSend[k]);
-	      }
-		printf("\n");
-		*/
-	      MPI_Send(
-		  linhaSend, 
-		  (tam + 2),
-		  MPI_INT, 
-		  0, 
-		  0, 
-		  MPI_COMM_WORLD); 
+        // Arrumar
+        int * linhaSend = (int *) malloc ((tam + 2) * sizeof(int));
+        for (k = 0; k <= tam+2; k++) {
+          linhaSend[k] = 0;
+        }
+        for (k = 0; k <= last - first; k++) {
+          linhaSend[k] = tabul[ind2d(l - linha + 1, k + first)];
+        }
+        /*
+           for (k = 0; k <= last - first; k++) {
+           printf("%d ", linhaSend[k]);
+           }
+           printf("\n");
+           */
+        MPI_Send(
+            linhaSend, 
+            (tam + 2),
+            MPI_INT, 
+            0, 
+            0, 
+            MPI_COMM_WORLD); 
       }
     }
 
@@ -213,13 +232,13 @@ void InitTabul(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha){
   SetTabul(tabulIn, tam, tamLocal, linha, 3 + tam/2, 2 + tam/2, ALIVE);
   SetTabul(tabulIn, tam, tamLocal, linha, 3 + tam/2, 3 + tam/2, ALIVE);
 
-/*
-  SetTabul(tabulIn, tam, tamLocal, linha, 1, 2, ALIVE);
-  SetTabul(tabulIn, tam, tamLocal, linha, 2, 3, ALIVE);
-  SetTabul(tabulIn, tam, tamLocal, linha, 3, 1, ALIVE);
-  SetTabul(tabulIn, tam, tamLocal, linha, 3, 2, ALIVE);
-  SetTabul(tabulIn, tam, tamLocal, linha, 3, 3, ALIVE);
-*/
+  /*
+     SetTabul(tabulIn, tam, tamLocal, linha, 1, 2, ALIVE);
+     SetTabul(tabulIn, tam, tamLocal, linha, 2, 3, ALIVE);
+     SetTabul(tabulIn, tam, tamLocal, linha, 3, 1, ALIVE);
+     SetTabul(tabulIn, tam, tamLocal, linha, 3, 2, ALIVE);
+     SetTabul(tabulIn, tam, tamLocal, linha, 3, 3, ALIVE);
+     */
 }
 
 // Correto: Verifica se a configuracao final do tabuleiro
@@ -244,35 +263,35 @@ int Correto(int* tabul, int tam, int myId, int tamLocal, int linha, int numProc)
       cnt = cnt + tabul[ind2d(linhaTeste - linha, ij)];
     }
 
-      if (linhaTeste == tam)
-        isCorreto = 
-          cnt == 3 && 
-          tabul[ind2d(linhaTeste - linha, tam)] &&
-          tabul[ind2d(linhaTeste - linha, tam-1)] &&
-          tabul[ind2d(linhaTeste - linha, tam-2)];
-      else if( linhaTeste == tam-1)
-        isCorreto = 
-          cnt == 1 && 
-          tabul[ind2d(linhaTeste - linha, tam)];
-      else if (linhaTeste == tam-2)
-        isCorreto = 
-          cnt == 1 && 
-          tabul[ind2d(linhaTeste - linha, tam-1)];
-      else
-        isCorreto = cnt == 0;
+    if (linhaTeste == tam)
+      isCorreto = 
+        cnt == 3 && 
+        tabul[ind2d(linhaTeste - linha, tam)] &&
+        tabul[ind2d(linhaTeste - linha, tam-1)] &&
+        tabul[ind2d(linhaTeste - linha, tam-2)];
+    else if( linhaTeste == tam-1)
+      isCorreto = 
+        cnt == 1 && 
+        tabul[ind2d(linhaTeste - linha, tam)];
+    else if (linhaTeste == tam-2)
+      isCorreto = 
+        cnt == 1 && 
+        tabul[ind2d(linhaTeste - linha, tam-1)];
+    else
+      isCorreto = cnt == 0;
 
-      printf("processo %d testando linha %d, linha %s, count %d \n", myId, linhaTeste, isCorreto ? "CORRETA" : "INCORRETA", cnt);
-    }
-    int *corretos = (int*) malloc (numProc * sizeof(int));
-      MPI_Gather(
-          &isCorreto, 1, MPI_INT,
-          corretos, 1, MPI_INT,
-          0, MPI_COMM_WORLD);
+    printf("processo %d testando linha %d, linha %s, count %d \n", myId, linhaTeste, isCorreto ? "CORRETA" : "INCORRETA", cnt);
+  }
+  int *corretos = (int*) malloc (numProc * sizeof(int));
+  MPI_Gather(
+      &isCorreto, 1, MPI_INT,
+      corretos, 1, MPI_INT,
+      0, MPI_COMM_WORLD);
 
   if (myId == 0) {
     int processo = 1;
     for(processo = 1; processo < numProc; processo++) {
-          isCorreto = isCorreto && corretos[processo];
+      isCorreto = isCorreto && corretos[processo];
     }
     if (isCorreto) 
       printf("Resultado final está correto! \n");
