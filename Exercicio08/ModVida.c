@@ -19,11 +19,11 @@ double wall_time(void);
 
 
 
-void UmaVida(int* tabulIn, int* tabulOut, int tam) {
+void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int myId, int numProc) {
   int i, j;
   int vizviv;
   
-  for (i=1; i<=tam; i++) {
+  for (i=1; i<=tamLocal; i++) {
     for (j= 1; j<=tam; j++) {
       vizviv = 
 	tabulIn[ind2d(i-1,j-1)] + 
@@ -44,6 +44,8 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam) {
 	tabulOut[ind2d(i,j)] = tabulIn[ind2d(i,j)];
     }
   }
+
+  // atualizar ghost zones
 }
 
 // DumpTabul: Imprime trecho do tabuleiro entre
