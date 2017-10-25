@@ -49,6 +49,7 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
   // Envia linha 1 e linha tamLocal
   int tagPrev = 10;
   int tagNext = 20;
+  int msgCount = 0;
   MPI_Request sendPrev_request, sendNext_request;
   MPI_Request reqs[4];
   MPI_Status stat[4];
@@ -61,7 +62,7 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
         myId - 1,
         tagPrev,
         MPI_COMM_WORLD,
-        &reqs[0]);
+        &reqs[msgCount++]);
   }
 
   if (myId < numProc - 1) { 
@@ -72,7 +73,7 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
         myId + 1,
         tagNext,
         MPI_COMM_WORLD,
-        &reqs[1]);
+        &reqs[msgCount++]);
   }
 
   // atualizar ghost zones
@@ -88,7 +89,7 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
         myId + 1,
         tagNext,
         MPI_COMM_WORLD,
-        &reqs[2]);
+        &reqs[msgCount++]);
   }
   
   if ( myId > 0 ) {
@@ -99,10 +100,10 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
         myId - 1,
         tagPrev,
         MPI_COMM_WORLD,
-        &reqs[3]);
+        &reqs[msgCount++]);
   }
 
-  MPI_Waitall(4, &reqs, &stat);
+  MPI_Waitall(msgCount, reqs, stat);
 }
 
 // DumpTabul: Imprime trecho do tabuleiro entre
