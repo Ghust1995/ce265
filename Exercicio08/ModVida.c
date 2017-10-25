@@ -58,7 +58,7 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
   MPI_Status stat[4];
 
   if ( myId > 0 ) {
-    for (int j = 0; j < tam + 2; j++) {
+    for (j = 0; j < tam + 2; j++) {
       bufPrevSend[j] = tabulOut[ind2d(1, j)];
     }
     MPI_Isend(
@@ -72,7 +72,7 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
   }
 
   if (myId < numProc - 1) { 
-    for (int j = 0; j < tam + 2; j++) {
+    for (j = 0; j < tam + 2; j++) {
       bufNextSend[j] = tabulOut[ind2d(tamLocal, j)];
     }
     MPI_Isend(
@@ -114,14 +114,14 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
   MPI_Waitall(msgCount, reqs, stat);
 
   if ( myId > 0 ) {
-    for (int j = 0; j < tam + 2; j++) {
+    for (j = 0; j < tam + 2; j++) {
       tabulOut[ind2d(0, j)] = bufPrevRecv[j];
     }
   }
 
 
   if (myId < numProc - 1) { 
-    for (int j = 0; j < tam + 2; j++) {
+    for (j = 0; j < tam + 2; j++) {
       tabulOut[ind2d(tamLocal + 1, j)] = bufPrevRecv[j];
     }
   }
