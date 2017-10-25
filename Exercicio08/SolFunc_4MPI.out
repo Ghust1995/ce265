@@ -1,24 +1,36 @@
-processo 2 testando linha 4, linha CORRETA, count 1 
-processo 2 testando linha 5, linha CORRETA, count 1 
-processo 2 testando linha 6, linha CORRETA, count 3 
-processo 3 testando linha 5, linha CORRETA, count 1 
-processo 3 testando linha 6, linha CORRETA, count 3 
-processo 3 testando linha 7, linha CORRETA, count 0 
-processo 1 testando linha 3, linha CORRETA, count 0 
-processo 1 testando linha 4, linha CORRETA, count 1 
-processo 1 testando linha 5, linha CORRETA, count 1 
+[sdumont1120:10481] *** Process received signal ***
+[sdumont1120:10481] Signal: Segmentation fault (11)
+[sdumont1120:10481] Signal code: Address not mapped (1)
+[sdumont1120:10481] Failing at address: 0x100000008
+[sdumont1120:10481] [ 0] /lib64/libpthread.so.0(+0xf710) [0x2b941e538710]
+[sdumont1120:10481] [ 1] /opt/mpi/bullxmpi_gnu/1.2.8.4/lib/libmpi.so.1(+0x10148a) [0x2b941d5b748a]
+[sdumont1120:10481] [ 2] /opt/mpi/bullxmpi_gnu/1.2.8.4/lib/libmpi.so.1(opal_memory_ptmalloc2_int_free+0x3f8) [0x2b941d5b84c8]
+[sdumont1120:10481] [ 3] /opt/mpi/bullxmpi_gnu/1.2.8.4/lib/libmpi.so.1(opal_memory_ptmalloc2_free+0xd3) [0x2b941d5b8793]
+[sdumont1120:10481] [ 4] /opt/mpi/bullxmpi_gnu/1.2.8.4/lib/libmpi.so.1(+0x11a4d2) [0x2b941d5d04d2]
+[sdumont1120:10481] [ 5] /opt/mpi/bullxmpi_gnu/1.2.8.4/lib/libmpi.so.1(ompi_mpi_finalize+0x259) [0x2b941d51bad9]
+[sdumont1120:10481] [ 6] /scratch/ce2652016/gustavo.guimaraes/ce265/Exercicio08/Funciona.exe(main+0x128) [0x401ac8]
+[sdumont1120:10481] [ 7] /lib64/libc.so.6(__libc_start_main+0xfd) [0x2b941e764d5d]
+[sdumont1120:10481] [ 8] /scratch/ce2652016/gustavo.guimaraes/ce265/Exercicio08/Funciona.exe() [0x400c39]
+[sdumont1120:10481] *** End of error message ***
+processo 3 testando linha 5, linha INCORRETA, count 0 
+processo 3 testando linha 6, linha INCORRETA, count 0 
+processo 3 testando linha 7, linha INCORRETA, count 0 
 Inicial; Dump posicoes [1:6, 1:6] de tabuleiro 6 x 6
 =======
+.X....
+..X...
+XXX...
 ......
 ......
 ......
-....X.
-.....X
-...XXX
 =======
 processo 0 testando linha 0, linha CORRETA, count 0 
-processo 0 testando linha 1, linha CORRETA, count 0 
-processo 0 testando linha 2, linha CORRETA, count 0 
-processo 0 testando linha 3, linha CORRETA, count 0 
-processo 0 testando linha 4, linha CORRETA, count 1 
-Resultado final está correto! 
+processo 0 testando linha 1, linha INCORRETA, count 1 
+processo 0 testando linha 2, linha INCORRETA, count 1 
+processo 0 testando linha 3, linha INCORRETA, count 3 
+processo 0 testando linha 4, linha INCORRETA, count 0 
+Resultado final está incorreto! 
+processo 1 testando linha 3, linha INCORRETA, count 3 
+processo 1 testando linha 4, linha INCORRETA, count 0 
+processo 1 testando linha 5, linha INCORRETA, count 0 
+srun: error: sdumont1120: task 2: Segmentation fault
