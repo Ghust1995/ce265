@@ -68,7 +68,8 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
         myId - 1,
         tagPrev,
         MPI_COMM_WORLD,
-        &reqs[msgCount++]);
+        &reqs[msgCount]);
+    msgCount++;
   }
 
   if (myId < numProc - 1) { 
@@ -82,7 +83,8 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
         myId + 1,
         tagNext,
         MPI_COMM_WORLD,
-        &reqs[msgCount++]);
+        &reqs[msgCount]);
+    msgCount++;
   }
 
   // atualizar ghost zones
@@ -97,7 +99,8 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
         myId + 1,
         tagNext,
         MPI_COMM_WORLD,
-        &reqs[msgCount++]);
+        &reqs[msgCount]);
+    msgCount++;
   }
 
   if ( myId > 0 ) {
@@ -108,7 +111,8 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
         myId - 1,
         tagPrev,
         MPI_COMM_WORLD,
-        &reqs[msgCount++]);
+        &reqs[msgCount]);
+    msgCount++;
   }
 
   MPI_Waitall(msgCount, reqs, stat);
