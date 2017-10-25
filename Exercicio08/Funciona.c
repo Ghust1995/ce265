@@ -47,21 +47,24 @@ int main(int argc, char *argv[]) {
 
 
     // dump tabuleiro inicial
-    DumpTabul(tabulIn, tam, 1, tam, "Inicial", tamLocal, linha, myId, numProc);
-    //for (i=0; i<2*(tam-3); i++) {
-      //UmaVida(tabulIn, tabulOut, tam, tamLocal, linha, myId, numProc);
-      //sprintf(msg,"Iter %3.3d\0", 2*i+1);
-      //DumpTabul(tabulIn, tam, 1, tam, msg, tamLocal, linha, myId, numProc);
+   DumpTabul(tabulIn, tam, 1, tam, "Inicial", tamLocal, linha, myId, numProc);
+/*
+    for (i=0; i<2*(tam-3); i++) {
+      UmaVida(tabulIn, tabulOut, tam, tamLocal, linha, myId, numProc);
+      sprintf(msg,"Iter %3.3d\0", 2*i+1);
+      DumpTabul(tabulIn, tam, 1, tam, msg, tamLocal, linha, myId, numProc);
 
-      //UmaVida(tabulOut, tabulIn, tam, tamLocal, linha, myId, numProc);
-      //sprintf(msg,"Iter %3.3d\0", 2*i+2);
-      //DumpTabul(tabulIn, tam, 1, tam, msg, tamLocal, linha, myId, numProc);
-     //}
+      UmaVida(tabulOut, tabulIn, tam, tamLocal, linha, myId, numProc);
+      sprintf(msg,"Iter %3.3d\0", 2*i+2);
+      DumpTabul(tabulIn, tam, 1, tam, msg, tamLocal, linha, myId, numProc);
+     }
+*/
 
     Correto(tabulIn, tam, myId, tamLocal, linha, numProc);
 
    free(tabulIn);
    free(tabulOut);
+
   }
 
  
@@ -69,7 +72,6 @@ int main(int argc, char *argv[]) {
     // printf("**RESULTADO CORRETO**\n");
   // else
     // printf("**RESULTADO ERRADO**\n");
-
 
   MPI_Finalize();
   exit(0);    

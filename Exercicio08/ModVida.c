@@ -54,6 +54,8 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
   MPI_Status stat[2];
 
   if ( myId > 0 ) {
+	printf("ID %d enviando linha 1\n", myId);
+	fflush(stdout);
     MPI_Isend(
 	tabulOut + ind2d(1, 0),
         tam + 2,
@@ -62,9 +64,13 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
         tagPrev,
         MPI_COMM_WORLD,
         &reqs[msgCount++]);
+	printf("ID %d enviou linha 1\n", myId);
+	fflush(stdout);
   }
 
   if (myId < numProc - 1) { 
+	printf("ID %d enviando linha final\n", myId);
+	fflush(stdout);
     MPI_Isend(
 	tabulOut + ind2d(tamLocal, 0),
         tam + 2,
@@ -73,6 +79,8 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
         tagNext,
         MPI_COMM_WORLD,
         &reqs[msgCount++]);
+	printf("ID %d enviou linha final\n", myId);
+	fflush(stdout);
   }
 
   // atualizar ghost zones
@@ -101,6 +109,7 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
 	&stat[1]);
   }
 
+	MPI_Barrier(MPI_COMM_WORLD);
 }
 
 // DumpTabul: Imprime trecho do tabuleiro entre
@@ -149,6 +158,7 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
         }
 
         printf("\n");
+	free(linhaOutro);
       }
     }
     else { // Not main process
@@ -167,13 +177,15 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
            }
            printf("\n");
            */
-        MPI_Send(
+        
+	MPI_Send(
             linhaSend, 
             (tam + 2),
             MPI_INT, 
             0, 
             0, 
-            MPI_COMM_WORLD); 
+            MPI_COMM_WORLD);
+	free(linhaSend);
       }
     }
 
@@ -275,4 +287,5 @@ int Correto(int* tabul, int tam, int myId, int tamLocal, int linha, int numProc)
     else
       printf("Resultado final está incorreto! \n");
   } 
+	free(corretos);
 }
