@@ -45,14 +45,17 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
     }
   }
 
+  // Atualizar ghost zones
   // Mandar ghost zones
   // Envia linha 1 e linha tamLocal
+  // Pegar ghost zones dos outros
+  // Recebe em linha 0 e linha tamLocal + 1
+
   int tagPrev = 10;
   int tagNext = 20;
   int msgCount = 0;
-  MPI_Request sendPrev_request, sendNext_request;
-  MPI_Request reqs[4];
-  MPI_Status stat[4];
+  MPI_Request reqs[2];
+  MPI_Status stat[2];
 
   if ( myId > 0 ) {
     MPI_Isend(
@@ -66,22 +69,6 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
   }
 
   if (myId < numProc - 1) { 
-    MPI_Isend(
-        tabulOut + ind2d(tamLocal, 0),
-        tam,
-        MPI_INT,
-        myId + 1,
-        tagNext,
-        MPI_COMM_WORLD,
-        &reqs[msgCount++]);
-  }
-
-  // atualizar ghost zones
-  // Pegar ghost zones dos outros
-  // Recebe em linha 0 e linha tamLocal + 1
-  MPI_Request recvPrev_request, recvNext_request;
-
-  if (myId < numProc - 1) { 
     MPI_Irecv(
         tabulOut + ind2d(0, 0),
         tam,
@@ -91,7 +78,22 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
         MPI_COMM_WORLD,
         &reqs[msgCount++]);
   }
-  
+
+  MPI_Waitall(msgCount, reqs, stat);
+  msgCount = 0;
+
+ 
+  if (myId < numProc - 1) { 
+    MPI_Isend(
+        tabulOut + ind2d(tamLocal, 0),
+        tam,
+        MPI_INT,
+        myId + 1,
+        tagNext,
+        MPI_COMM_WORLD,
+        &reqs[msgCount++]);
+  }
+   
   if ( myId > 0 ) {
     MPI_Irecv(
         tabulOut + ind2d(tamLocal + 1, 0),
