@@ -45,7 +45,64 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
     }
   }
 
+  // Mandar ghost zones
+  // Envia linha 1 e linha tamLocal
+  int tagPrev = 10;
+  int tagNext = 20;
+  MPI_Request sendPrev_request, sendNext_request;
+  MPI_Request reqs[4];
+  MPI_Status stat[4];
+
+  if ( myId > 0 ) {
+    MPI_Isend(
+        tabulOut + ind2d(1, 0),
+        tam,
+        MPI_INT,
+        myId - 1,
+        tagPrev,
+        MPI_COMM_WORLD,
+        &reqs[0]);
+  }
+
+  if (myId < numProc - 1) { 
+    MPI_Isend(
+        tabulOut + ind2d(tamLocal, 0),
+        tam,
+        MPI_INT,
+        myId + 1,
+        tagNext,
+        MPI_COMM_WORLD,
+        &reqs[1]);
+  }
+
   // atualizar ghost zones
+  // Pegar ghost zones dos outros
+  // Recebe em linha 0 e linha tamLocal + 1
+  MPI_Request recvPrev_request, recvNext_request;
+
+  if (myId < numProc - 1) { 
+    MPI_Irecv(
+        tabulOut + ind2d(0, 0),
+        tam,
+        MPI_INT,
+        myId + 1,
+        tagNext,
+        MPI_COMM_WORLD,
+        &reqs[2]);
+  }
+  
+  if ( myId > 0 ) {
+    MPI_Irecv(
+        tabulOut + ind2d(tamLocal + 1, 0),
+        tam,
+        MPI_INT,
+        myId - 1,
+        tagPrev,
+        MPI_COMM_WORLD,
+        &reqs[3]);
+  }
+
+  MPI_Waitall(4, &reqs, &stat);
 }
 
 // DumpTabul: Imprime trecho do tabuleiro entre
