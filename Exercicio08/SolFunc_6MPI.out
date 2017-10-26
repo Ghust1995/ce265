@@ -1,3 +1,32 @@
+[sdumont1111:85178] *** Process received signal ***
+[sdumont1111:85178] Signal: Segmentation fault (11)
+[sdumont1111:85178] Signal code: Address not mapped (1)
+[sdumont1111:85178] Failing at address: 0x100000008
+[sdumont1111:85178] [ 0] /lib64/libpthread.so.0(+0xf710) [0x2b1004a2d710]
+[sdumont1111:85178] [ 1] /opt/mpi/bullxmpi_gnu/1.2.8.4/lib/libmpi.so.1(+0x10148a) [0x2b1003aac48a]
+[sdumont1111:85178] [ 2] /opt/mpi/bullxmpi_gnu/1.2.8.4/lib/libmpi.so.1(opal_memory_ptmalloc2_int_free+0x3f8) [0x2b1003aad4c8]
+[sdumont1111:85178] [ 3] /opt/mpi/bullxmpi_gnu/1.2.8.4/lib/libmpi.so.1(opal_memory_ptmalloc2_free+0xd3) [0x2b1003aad793]
+[sdumont1111:85178] [ 4] /opt/mpi/bullxmpi_gnu/1.2.8.4/lib/libmpi.so.1(+0x4ebbd) [0x2b10039f9bbd]
+[sdumont1111:85178] [ 5] /opt/mpi/bullxmpi_gnu/1.2.8.4/lib/bullxmpi_gnu/mca_btl_openib.so(+0xcc41) [0x2b1007ea1c41]
+[sdumont1111:85178] [ 6] /opt/mpi/bullxmpi_gnu/1.2.8.4/lib/bullxmpi_gnu/mca_btl_openib.so(mca_btl_openib_finalize+0x6f9) [0x2b1007e9f549]
+[sdumont1111:85178] [ 7] /opt/mpi/bullxmpi_gnu/1.2.8.4/lib/libmpi.so.1(mca_btl_base_close+0x83) [0x2b1003a3c6f3]
+[sdumont1111:85178] [ 8] /opt/mpi/bullxmpi_gnu/1.2.8.4/lib/bullxmpi_gnu/mca_pml_ob1.so(+0x56d9) [0x2b100785f6d9]
+[sdumont1111:85178] [ 9] /opt/mpi/bullxmpi_gnu/1.2.8.4/lib/libmpi.so.1(mca_base_components_close+0x7a) [0x2b1003ab4f3a]
+[sdumont1111:85178] [10] /opt/mpi/bullxmpi_gnu/1.2.8.4/lib/libmpi.so.1(mca_pml_base_close+0xcd) [0x2b1003a4d8dd]
+[sdumont1111:85178] [11] /opt/mpi/bullxmpi_gnu/1.2.8.4/lib/libmpi.so.1(ompi_mpi_finalize+0x2e2) [0x2b1003a10b62]
+[sdumont1111:85178] [12] /scratch/ce2652016/gustavo.guimaraes/ce265/Exercicio08/Funciona.exe(main+0x128) [0x401c38]
+[sdumont1111:85178] [13] /lib64/libc.so.6(__libc_start_main+0xfd) [0x2b1004c59d5d]
+[sdumont1111:85178] [14] /scratch/ce2652016/gustavo.guimaraes/ce265/Exercicio08/Funciona.exe() [0x400d09]
+[sdumont1111:85178] *** End of error message ***
+processo 2 testando linha 2, linha INCORRETA, count 1 
+processo 2 testando linha 3, linha INCORRETA, count 3 
+processo 2 testando linha 4, linha INCORRETA, count 0 
+processo 1 testando linha 1, linha INCORRETA, count 1 
+processo 1 testando linha 2, linha INCORRETA, count 1 
+processo 1 testando linha 3, linha INCORRETA, count 3 
+processo 5 testando linha 5, linha INCORRETA, count 0 
+processo 5 testando linha 6, linha INCORRETA, count 0 
+processo 5 testando linha 7, linha INCORRETA, count 0 
 Inicial; Dump posicoes [1:6, 1:6] de tabuleiro 6 x 6
 =======
 .X....
@@ -7,3 +36,11 @@ XXX...
 ......
 ......
 =======
+processo 0 testando linha 0, linha CORRETA, count 0 
+processo 0 testando linha 1, linha INCORRETA, count 1 
+processo 0 testando linha 2, linha INCORRETA, count 1 
+Resultado final está incorreto! 
+processo 3 testando linha 3, linha INCORRETA, count 3 
+processo 3 testando linha 4, linha INCORRETA, count 0 
+processo 3 testando linha 5, linha INCORRETA, count 0 
+srun: error: sdumont1111: task 4: Segmentation fault
