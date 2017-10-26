@@ -1,22 +1,11 @@
-processo 2 testando linha 4, linha INCORRETA, count 0 
-processo 2 testando linha 5, linha INCORRETA, count 0 
-processo 2 testando linha 6, linha INCORRETA, count 0 
-processo 2 testando linha 7, linha INCORRETA, count 0 
 Inicial; Dump posicoes [1:6, 1:6] de tabuleiro 6 x 6
 =======
 .X....
 ..X...
-XXX...
 ......
-......
-......
-=======
-processo 0 testando linha 0, linha CORRETA, count 0 
-processo 0 testando linha 1, linha INCORRETA, count 1 
-processo 0 testando linha 2, linha INCORRETA, count 1 
-processo 0 testando linha 3, linha INCORRETA, count 3 
-Resultado final está incorreto! 
-processo 1 testando linha 2, linha INCORRETA, count 1 
-processo 1 testando linha 3, linha INCORRETA, count 3 
-processo 1 testando linha 4, linha INCORRETA, count 0 
-processo 1 testando linha 5, linha INCORRETA, count 0 
+srun: got SIGCONT
+srun: Job step aborted: Waiting up to 302 seconds for job step to finish.
+slurmstepd: *** STEP 130973.0 ON sdumont1111 CANCELLED AT 2017-10-25T06:55:41 ***
+slurmstepd: *** JOB 130973 ON sdumont1111 CANCELLED AT 2017-10-25T06:55:41 ***
+srun: forcing job termination
+slurmstepd: task_p_post_term: rmdir(/dev/cpuset/slurm130973/slurm130973.4294967294_0) failed Device or resource busy

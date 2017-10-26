@@ -64,8 +64,7 @@ int main(int argc, char *argv[]) {
 
    free(tabulIn);
    free(tabulOut);
-   MPI_Barrier(MPI_COMM_WORLD);
-
+   //MPI_Barrier(MPI_COMM_WORLD);
   }
 
  
@@ -74,6 +73,6 @@ int main(int argc, char *argv[]) {
   // else
     // printf("**RESULTADO ERRADO**\n");
 
-  MPI_Finalize();
-  exit(0);    
+  //MPI_Finalize();
+  exit(0);
 }

@@ -54,8 +54,6 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
   MPI_Status stat[2];
 
   if ( myId > 0 ) {
-	printf("ID %d enviando linha 1\n", myId);
-	fflush(stdout);
     MPI_Isend(
 	tabulOut + ind2d(1, 0),
         tam + 2,
@@ -64,13 +62,9 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
         tagPrev,
         MPI_COMM_WORLD,
         &reqs[msgCount++]);
-	printf("ID %d enviou linha 1\n", myId);
-	fflush(stdout);
   }
 
   if (myId < numProc - 1) { 
-	printf("ID %d enviando linha final\n", myId);
-	fflush(stdout);
     MPI_Isend(
 	tabulOut + ind2d(tamLocal, 0),
         tam + 2,
@@ -79,8 +73,6 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
         tagNext,
         MPI_COMM_WORLD,
         &reqs[msgCount++]);
-	printf("ID %d enviou linha final\n", myId);
-	fflush(stdout);
   }
 
   // atualizar ghost zones
@@ -108,8 +100,6 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
         MPI_COMM_WORLD,
 	&stat[1]);
   }
-
-	MPI_Barrier(MPI_COMM_WORLD);
 }
 
 // DumpTabul: Imprime trecho do tabuleiro entre
@@ -121,7 +111,7 @@ void UmaVida(int* tabulIn, int* tabulOut, int tam, int tamLocal, int linha, int 
 
 void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLocal, int linha, int myId, int numProc) {
   int i, l, ij, k;
-  int * linhaSend, linhaOutro;
+  int * linhaSend, * linhaOutro;
 
   if(myId == 0) {
     printf("%s; Dump posicoes [%d:%d, %d:%d] de tabuleiro %d x %d\n", msg, first, last, first, last, tam, tam);
@@ -144,6 +134,8 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
         linhaOutro = (int *) malloc ((tam + 2) * sizeof(int));
 
         int processo = (l - tamLocal - 1) / (tam/numProc) + 1;
+	printf("esperando mensagem do processo %d para linha %d\n", processo, l);
+	fflush(stdout);
 
         MPI_Recv(
             linhaOutro, 
@@ -159,13 +151,15 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
         }
 
         printf("\n");
+	fflush(stdout);
+	free(linhaOutro);
       }
     }
     else { // Not main process
-      if (l < linha + tamLocal && l >= linha) {
+      if (l < linha + tamLocal + 1 && l >= linha + 1) {
         // Arrumar
         linhaSend = (int *) malloc ((tam + 2) * sizeof(int));
-        for (k = 0; k <= tam+2; k++) {
+        for (k = 0; k < tam+2; k++) {
           linhaSend[k] = 0;
         }
         for (k = 0; k <= last - first; k++) {
@@ -177,6 +171,9 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
            }
            printf("\n");
            */
+
+	printf("enviando mensagem do processo %d para linha %d\n", myId, l);
+	fflush(stdout);
         
 	MPI_Send(
             linhaSend, 
@@ -185,6 +182,7 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
             0, 
             0, 
             MPI_COMM_WORLD);
+	free(linhaSend);
       }
     }
 
@@ -192,8 +190,6 @@ void DumpTabul(int * tabul, int tam, int first, int last, char* msg, int tamLoca
   if(myId == 0) {
     for (i=first; i<=last; i++) printf("="); printf("=\n");
   }
-	free(linhaSend);
-	free(linhaOutro);
 }
 
 

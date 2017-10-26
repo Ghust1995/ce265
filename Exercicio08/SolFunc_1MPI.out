@@ -1,0 +1,2 @@
+slurmstepd: execve(): /scratch/ce2652016/gustavo.guimaraes/ce265/Exercicio08/Funciona.exe: No such file or directory
+srun: error: sdumont1111: task 0: Exited with exit code 2
