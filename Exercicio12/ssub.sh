@@ -1,12 +1,12 @@
 #!/bin/bash
-#SBATCH --nodes=1
+#SBATCH --nodes=3
 #SBATCH --ntasks-per-node=24
-#SBATCH --ntasks=4
+#SBATCH --ntasks=64
 #SBATCH --cpus-per-task=1
 #SBATCH -p cpu_dev
-#SBATCH -J SP_4
+#SBATCH -J SP_64
 #SBATCH --time=00:03:00
-#SBATCH --output=/scratch/ce2652016/gustavo.guimaraes/ce265/Exercicio12/SomaPar_4MPI.out
+#SBATCH --output=/scratch/ce2652016/gustavo.guimaraes/ce265/Exercicio12/SomaPar_64MPI.out
 #SBATCH --exclusive
 
 cd $SLURM_SUBMIT_DIR

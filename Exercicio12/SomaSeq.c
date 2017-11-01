@@ -7,19 +7,19 @@ int main(int argc, char *argv[]) {
 
   // para desenvolvimento
 
-//#define VA "bin/VectorATeste.bin"
-//#define VI "bin/VectorIndTeste.bin" 
-//#define RES -1544794685
-  //const int m=32;
-  //const int n=16;
+#define VA "bin/VectorATeste.bin"
+#define VI "bin/VectorIndTeste.bin" 
+#define RES -1544794685
+  const int m=32;
+  const int n=16;
 
   // para entregar
 
-  #define VA "bin/VectorA.bin"
-  #define VI "bin/VectorInd.bin" 
-  #define RES 48820191429
-    const int m=16777216;
-    const int n=2048;
+  //#define VA "bin/VectorA.bin"
+  //#define VI "bin/VectorInd.bin" 
+  //#define RES 48820191429
+    //const int m=16777216;
+    //const int n=2048;
 
   // le vetor A do arquivo bin/VectorA.bin
 
