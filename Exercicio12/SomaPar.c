@@ -191,5 +191,5 @@ int main(int argc, char *argv[]) {
   free(VetorInd);
   MPI_Win_free(&win);
   MPI_Finalize();
-  exit(0)
+  exit(0);
 }
