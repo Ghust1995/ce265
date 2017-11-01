@@ -140,10 +140,12 @@ int main(int argc, char *argv[]) {
   }
   
   // Criar janelas de comunicacao entre os processos
+/*
   MPI_Win win;
-  MPI_Win_Create(
+  MPI_Win_create(
       VetorA, localSizeA * sizeof(int), sizeof(int),
       MPI_INFO_NULL, MPI_COMM_WORLD, &win);
+*/
 
   // calcula a soma
   int i;
@@ -153,29 +155,47 @@ int main(int argc, char *argv[]) {
   {
     int ind = VetorInd[i];
     int indRank = ind/localSizeA;
+    int indDisp = ind % localSizeA;
+      printf("Process %d: adding value for rank %d, at disp %d from index %d Value: " , rank, indRank, indDisp, ind);
+      fflush(stdout);
     if (indRank == rank)
     {
       // A local contém o indice
-      localSum += VetorA[ind];
+      localSum += VetorA[indDisp];
+      printf("%d", VetorA[indDisp]);
+      fflush(stdout);
     }
     else
     {
       // O indice está em outro local
-      int indDisp = ind % localSizeA;
-      int A;
+      int A = 0;
+/*
       MPI_Get(
           &A, 1, MPI_INT, 
           indRank, 
           indDisp, 1, MPI_INT,
-          &win);
+          win);
+      //MPI_Win_fence(0, win);
+*/
+      printf("%d", A);
+      fflush(stdout);
       localSum += A;
     }
+
+      printf("\n");
+      fflush(stdout);
   }
+
+  // Free windows
+  //MPI_Win_free(&win);
+
 
   // Fazer um reduce no processo de rank 0
 
+      printf("ENDED LOCAL SUM\n");
+      fflush(stdout);
   long totalSum=0;
-  MPI_Reduce(&localSum, &totalSum, 1, MPI_INT,
+  MPI_Reduce(&localSum, &totalSum, 1, MPI_LONG,
               MPI_SUM, 0, MPI_COMM_WORLD);
 
   // verifica correcao
