@@ -11,7 +11,10 @@
 //          que representa o numero (3<=impar<=numMax)
 #define num2ind(i)  (((i)-3)/2)
 
-#define MAX_SUBDIVISION 1000000
+#define min(a, b) (a < b ? a : b)
+#define max(a, b) (a > b ? a : b)
+
+#define MAX_SUBDIVISION 8000
 
 double wall_time(void);
 
