@@ -1,3 +1,9 @@
 Calcular primos menores que 1000000000
+<<<<<<< HEAD
 Encontrou 50847534 primos
 Tempos: total=12.067154, init=1.182485, comp=10.121563, resto=0.763106
+=======
+
+Encontrou 50847534 primos
+Tempos: total=5.038713, init=1.188831, comp=3.085773, resto=0.764109
+>>>>>>> 31ea1dc17e896b405b6aa128b2228e989d18d7c0
